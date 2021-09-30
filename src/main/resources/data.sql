@@ -1,0 +1,1 @@
+INSERT INTO movies VALUES(999998,'testt9','test','testomg','[{"name": "somethhing", "id": here}]','1988-10-21',0,0,69.000000000000003552,NULL,'[{"id": 99, "name": "Drama"}, {"id": 80, "name": "Crime"}]','Released');
