@@ -2,6 +2,7 @@ package com.holmes.movieApplication.service.impl;
 
 import com.holmes.movieApplication.dto.movie.MovieDTO;
 import com.holmes.movieApplication.model.movie.Movie;
+import com.holmes.movieApplication.model.movie.MovieByYear;
 import com.holmes.movieApplication.repository.movie.MovieRepository;
 import com.holmes.movieApplication.service.MovieService;
 import com.holmes.movieApplication.util.FilterOutByYear;
@@ -57,18 +58,18 @@ public class MovieServiceImpl implements MovieService {
         return null;
     }
 
-    //TODO need to filter by year
     @Override
     public List<MovieDTO> getMoviesByYear(String year, int page) throws SQLException, IOException {
         log.info("MovieServiceImpl | getMoviesByYear | Start");
         Pageable pageable = PageRequest.of(1, page, Sort.by("releaseDate").descending());
-        Page<Movie> movies = movieRepository.findAll(pageable);
+        //Page<Movie> movies = movieRepository.findAll(pageable);
+        List<MovieByYear> newMoviesMethod = movieRepository.findAllByYear(year);
         List<MovieDTO> movieDTOS = new ArrayList<>();
         converter = new MovieToMovieDtoConverter();
         filterOutByYear = new FilterOutByYear();
-        for(Movie m : movies) {
+        for(MovieByYear m : newMoviesMethod) {
             MovieDTO movie = new MovieDTO();
-            movie = converter.converter(m);
+            //movie = converter.converter(m);
             movieDTOS.add(movie);
         }
         movieDTOS = filterOutByYear.filterMoviesByYear(movieDTOS, year);

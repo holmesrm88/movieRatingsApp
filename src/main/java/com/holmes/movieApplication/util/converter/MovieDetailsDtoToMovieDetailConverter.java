@@ -26,6 +26,7 @@ public class MovieDetailsDtoToMovieDetailConverter {
         dto.setGenres(details.getGenres() == null ? null : clobToString(details.getGenres()));
         dto.setLanguage(details.getLanguage() == null ? null : details.getLanguage());
         dto.setProductionCompanies(details.getProductionCompanies() == null ? null : clobToString(details.getProductionCompanies()));
+        dto.setRating(details.getRating() < 0? null : details.getRating());
 
         return dto;
     }
