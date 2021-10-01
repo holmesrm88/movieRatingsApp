@@ -5,7 +5,7 @@ import com.holmes.movieApplication.model.movie.Movie;
 import com.holmes.movieApplication.repository.movie.MovieRepository;
 import com.holmes.movieApplication.service.MovieService;
 import com.holmes.movieApplication.util.FilterOutByYear;
-import com.holmes.movieApplication.util.MovieToMovieDtoConverter;
+import com.holmes.movieApplication.util.converter.MovieToMovieDtoConverter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

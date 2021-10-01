@@ -1,7 +1,9 @@
 package com.holmes.movieApplication.controller;
 
 import com.holmes.movieApplication.dto.movie.MovieDTO;
+import com.holmes.movieApplication.dto.movieDetail.MovieDetailsDTO;
 import com.holmes.movieApplication.dto.rating.RatingDTO;
+import com.holmes.movieApplication.model.rating.MovieDetails;
 import com.holmes.movieApplication.service.MovieService;
 import com.holmes.movieApplication.service.RatingService;
 import lombok.extern.java.Log;
@@ -38,7 +40,7 @@ public class movieController {
     }
 
     @GetMapping("/getMovieDetails/{movieTitle}")
-    public RatingDTO getMovieDetails(@PathVariable String movieTitle) {
+    public MovieDetailsDTO getMovieDetails(@PathVariable String movieTitle) throws SQLException, IOException {
         return ratingService.getMovieDetails(movieTitle);
     }
 

@@ -1,4 +1,4 @@
-package com.holmes.movieApplication.util;
+package com.holmes.movieApplication.util.converter;
 
 import com.holmes.movieApplication.dto.movie.MovieDTO;
 import com.holmes.movieApplication.model.movie.Movie;
@@ -12,20 +12,20 @@ import java.sql.SQLException;
 
 public class MovieToMovieDtoConverter {
 
-    public MovieDTO converter(Movie dto) throws SQLException, IOException {
+    public MovieDTO converter(Movie movie) throws SQLException, IOException {
         MovieDTO movieDTO = new MovieDTO();
 
-        movieDTO.setBudget(dto.getBudget() == null ? null : "$"+dto.getBudget());
-        movieDTO.setGenres(dto.getGenres() == null ? null : clobToString(dto.getGenres()));
-        movieDTO.setImdbId(dto.getImdbId() == null ? null : dto.getImdbId());
+        movieDTO.setBudget(movie.getBudget() == null ? null : "$"+movie.getBudget());
+        movieDTO.setGenres(movie.getGenres() == null ? null : clobToString(movie.getGenres()));
+        movieDTO.setImdbId(movie.getImdbId() == null ? null : movie.getImdbId());
 //        movieDTO.setLanguage(dto.getLanguage() == null ? null : dto.getLanguage());
 //        movieDTO.setOverview(dto.getOverview() == null ? null : clobToString(dto.getOverview()));
 //        movieDTO.setRevenue(dto.getRevenue() == null ? null : dto.getRevenue());
 //        movieDTO.setRuntime(dto.getRuntime() == null ? null : dto.getRuntime());
-        movieDTO.setReleaseDate(dto.getReleaseDate() == null ? null : dto.getReleaseDate());
+        movieDTO.setReleaseDate(movie.getReleaseDate() == null ? null : movie.getReleaseDate());
 //        movieDTO.setProductionCompanies(dto.getProductionCompanies() == null ? null :  clobToString(dto.getProductionCompanies()));
 //        movieDTO.setStatus(dto.getStatus() == null ? null : dto.getStatus());
-        movieDTO.setTitle(dto.getTitle() == null ? null : dto.getTitle());
+        movieDTO.setTitle(movie.getTitle() == null ? null : movie.getTitle());
 
         return movieDTO;
     }

@@ -1,14 +1,13 @@
 package com.holmes.movieApplication.model.movie;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.holmes.movieApplication.model.rating.Rating;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Clob;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,9 +18,6 @@ public class Movie {
     @Id
     @Column(name = "movieId")
     private Integer movieId;
-
-//    @Column(name = "movie_id")
-//    private Integer movie_id;
 
     @Column(name = "imdbId")
     private String imdbId;
@@ -55,4 +51,7 @@ public class Movie {
 
     @Column(name = "status")
     private String status;
+
+//    @OneToMany(mappedBy = "movie")
+//    private List<Rating> ratings;
 }
