@@ -4,6 +4,7 @@ import com.holmes.movieApplication.dto.movie.MovieDTO;
 import com.holmes.movieApplication.model.movie.Movie;
 import com.holmes.movieApplication.repository.movie.MovieRepository;
 import com.holmes.movieApplication.service.MovieService;
+import com.holmes.movieApplication.util.FilterOutByYear;
 import com.holmes.movieApplication.util.MovieToMovieDtoConverter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class MovieServiceImpl implements MovieService {
 
     MovieRepository movieRepository;
     MovieToMovieDtoConverter converter;
+    FilterOutByYear filterOutByYear;
 
     @Autowired
     public MovieServiceImpl(MovieRepository movieRepository) {
@@ -55,20 +57,21 @@ public class MovieServiceImpl implements MovieService {
         return null;
     }
 
+    //TODO need to filter by year
     @Override
     public List<MovieDTO> getMoviesByYear(String year, int page) throws SQLException, IOException {
         log.info("MovieServiceImpl | getMoviesByYear | Start");
         Pageable pageable = PageRequest.of(1, page, Sort.by("releaseDate").descending());
         Page<Movie> movies = movieRepository.findAll(pageable);
-        List<Movie> mov = movies.toList();
-        List<Movie> me = movies.getContent();
         List<MovieDTO> movieDTOS = new ArrayList<>();
         converter = new MovieToMovieDtoConverter();
-        for(Movie m : movies){
+        filterOutByYear = new FilterOutByYear();
+        for(Movie m : movies) {
             MovieDTO movie = new MovieDTO();
             movie = converter.converter(m);
             movieDTOS.add(movie);
         }
+        movieDTOS = filterOutByYear.filterMoviesByYear(movieDTOS, year);
         log.info("MovieServiceImpl | getMoviesByYear returning " +movieDTOS.size() +" | END");
         return movieDTOS;
     }

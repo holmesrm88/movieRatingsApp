@@ -7,6 +7,9 @@ import com.holmes.movieApplication.service.RatingService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +29,12 @@ public class movieController {
     RatingService ratingService;
 
     @GetMapping("/getAllMovies/{page}")
-    public List<MovieDTO> getAllMovies(@PathVariable("page") int page) throws SQLException, IOException {
-        return movieService.getAllMovies(page);
+    public ResponseEntity getAllMovies(@PathVariable("page") int page) throws SQLException, IOException {
+        List<MovieDTO> movies = movieService.getAllMovies(page);
+        if (movies.size() > 0) {
+            return new ResponseEntity(movies, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/getMovieDetails/{movieTitle}")
@@ -36,8 +43,12 @@ public class movieController {
     }
 
     @GetMapping("/getMovies/{year}/{page}")
-    public List<MovieDTO> getMoviesByYear(@PathVariable("year") String year, @PathVariable("page") int page ) throws SQLException, IOException {
-        return movieService.getMoviesByYear(year, page);
+    public ResponseEntity getMoviesByYear(@PathVariable("year") String year, @PathVariable("page") int page ) throws SQLException, IOException {
+        List<MovieDTO> movies = movieService.getMoviesByYear(year, page);
+        if(movies.size() > 0){
+            return new ResponseEntity(movies, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/getMovies/genre/{genre}")
