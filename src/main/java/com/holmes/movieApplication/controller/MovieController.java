@@ -1,12 +1,9 @@
 package com.holmes.movieApplication.controller;
 
-import com.holmes.movieApplication.dto.MovieByYear.MovieByYearDTO;
 import com.holmes.movieApplication.dto.movie.MovieDTO;
 import com.holmes.movieApplication.dto.movieDetail.MovieDetailsDTO;
-import com.holmes.movieApplication.exception.ErrorResponse;
 import com.holmes.movieApplication.service.MovieService;
 import com.holmes.movieApplication.service.RatingService;
-import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,7 +27,6 @@ public class MovieController {
         this.movieService =movieService;
     }
 
-    @SneakyThrows
     @GetMapping("/getAllMovies/{page}")
     public ResponseEntity getAllMovies(@PathVariable("page") int page)  {
             return new ResponseEntity(movieService.getAllMovies(page), HttpStatus.OK);
