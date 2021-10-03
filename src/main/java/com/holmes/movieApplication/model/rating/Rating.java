@@ -1,7 +1,6 @@
 package com.holmes.movieApplication.model.rating;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.holmes.movieApplication.model.movie.Movie;
 import lombok.Getter;
 import lombok.Setter;
 

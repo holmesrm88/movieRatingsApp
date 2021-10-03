@@ -2,39 +2,31 @@ package com.holmes.movieApplication.util.converter;
 
 import com.holmes.movieApplication.dto.movie.MovieDTO;
 import com.holmes.movieApplication.model.movie.Movie;
-import org.apache.commons.io.IOUtils;
+import com.holmes.movieApplication.util.MovieApplicationUtil;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.sql.Clob;
 import java.sql.SQLException;
 
+@Log
 public class MovieToMovieDtoConverter {
-
-    public MovieDTO converter(Movie movie) throws SQLException, IOException {
+    public MovieDTO converter(Movie movie) {
         MovieDTO movieDTO = new MovieDTO();
 
-        movieDTO.setBudget(movie.getBudget() == null ? null : "$"+movie.getBudget());
-        movieDTO.setGenres(movie.getGenres() == null ? null : clobToString(movie.getGenres()));
-        movieDTO.setImdbId(movie.getImdbId() == null ? null : movie.getImdbId());
-//        movieDTO.setLanguage(dto.getLanguage() == null ? null : dto.getLanguage());
-//        movieDTO.setOverview(dto.getOverview() == null ? null : clobToString(dto.getOverview()));
-//        movieDTO.setRevenue(dto.getRevenue() == null ? null : dto.getRevenue());
-//        movieDTO.setRuntime(dto.getRuntime() == null ? null : dto.getRuntime());
-        movieDTO.setReleaseDate(movie.getReleaseDate() == null ? null : movie.getReleaseDate());
-//        movieDTO.setProductionCompanies(dto.getProductionCompanies() == null ? null :  clobToString(dto.getProductionCompanies()));
-//        movieDTO.setStatus(dto.getStatus() == null ? null : dto.getStatus());
-        movieDTO.setTitle(movie.getTitle() == null ? null : movie.getTitle());
-
+        try {
+            movieDTO.setBudget(movie.getBudget() == null ? null : "$" + movie.getBudget());
+            movieDTO.setGenres(movie.getGenres() == null ? null : MovieApplicationUtil.clobToString(movie.getGenres()));
+            movieDTO.setImdbId(movie.getImdbId() == null ? null : movie.getImdbId());
+            movieDTO.setReleaseDate(movie.getReleaseDate() == null ? null : movie.getReleaseDate());
+            movieDTO.setTitle(movie.getTitle() == null ? null : movie.getTitle());
+        } catch (SQLException throwables) {
+            log.info("SQL Exception occurred: " + throwables.getMessage());
+            throwables.printStackTrace();
+        } catch (IOException e) {
+            log.info("IOException occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
         return movieDTO;
     }
 
-    public String clobToString(Clob clob) throws SQLException, IOException {
-        InputStream in = clob.getAsciiStream();
-        StringWriter w = new StringWriter();
-        IOUtils.copy(in, w);
-        String s = w.toString();
-        return s;
-    }
 }

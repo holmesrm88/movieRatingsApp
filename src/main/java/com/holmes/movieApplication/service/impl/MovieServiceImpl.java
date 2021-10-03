@@ -1,11 +1,12 @@
 package com.holmes.movieApplication.service.impl;
 
+import com.holmes.movieApplication.dto.MovieByYear.MovieByYearDTO;
 import com.holmes.movieApplication.dto.movie.MovieDTO;
 import com.holmes.movieApplication.model.movie.Movie;
 import com.holmes.movieApplication.model.movie.MovieByYear;
 import com.holmes.movieApplication.repository.movie.MovieRepository;
 import com.holmes.movieApplication.service.MovieService;
-import com.holmes.movieApplication.util.FilterOutByYear;
+import com.holmes.movieApplication.util.converter.MovieByYearToMovieByYearDtoConverter;
 import com.holmes.movieApplication.util.converter.MovieToMovieDtoConverter;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Log
 public class MovieServiceImpl implements MovieService {
 
     MovieRepository movieRepository;
-    MovieToMovieDtoConverter converter;
-    FilterOutByYear filterOutByYear;
+    MovieByYearToMovieByYearDtoConverter movieByYearDtoConverter;
+    MovieToMovieDtoConverter movieToMovieDtoConverter;
 
     @Autowired
     public MovieServiceImpl(MovieRepository movieRepository) {
@@ -34,46 +34,40 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDTO> getAllMovies(int page) throws SQLException, IOException {
+    public List<MovieDTO> getAllMovies(int page) {
         log.info("MovieServiceImpl | getAllMovies | Start");
-        Pageable pageable = PageRequest.of(1, page);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Movie> movies = movieRepository.findAll(pageable);
-        List<Movie> mov = movies.toList();
-        List<Movie> me = movies.getContent();
-//        List<Movie> movies = movieRepository.findAll();
         List<MovieDTO> movieDTOS = new ArrayList<>();
-        converter = new MovieToMovieDtoConverter();
+        movieToMovieDtoConverter = new MovieToMovieDtoConverter();
         for(Movie m : movies){
             MovieDTO movie = new MovieDTO();
-            movie = converter.converter(m);
+            movie = movieToMovieDtoConverter.converter(m);
             movieDTOS.add(movie);
         }
         log.info("MovieServiceImpl | getAllMovies returning " +movieDTOS.size() +" | END");
+        if(movieDTOS.size() == 0){
+            throw new NoSuchElementException();
+        }
         return movieDTOS;
     }
 
     @Override
-    public MovieDTO getMovieDetails(String title) {
-        log.info("MovieServiceImpl | getMovieDetails | Start");
-        return null;
-    }
-
-    @Override
-    public List<MovieDTO> getMoviesByYear(String year, int page) throws SQLException, IOException {
+    public List<MovieByYearDTO> getMoviesByYear(String year, int page){
         log.info("MovieServiceImpl | getMoviesByYear | Start");
-        Pageable pageable = PageRequest.of(1, page, Sort.by("releaseDate").descending());
-        //Page<Movie> movies = movieRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, 25, Sort.by("releaseDate").descending());
         List<MovieByYear> newMoviesMethod = movieRepository.findAllByYear(year);
-        List<MovieDTO> movieDTOS = new ArrayList<>();
-        converter = new MovieToMovieDtoConverter();
-        filterOutByYear = new FilterOutByYear();
-        for(MovieByYear m : newMoviesMethod) {
-            MovieDTO movie = new MovieDTO();
-            //movie = converter.converter(m);
-            movieDTOS.add(movie);
+        List<MovieByYearDTO> movieDTOS = new ArrayList<>();
+        movieByYearDtoConverter = new MovieByYearToMovieByYearDtoConverter();
+            for(MovieByYear m : newMoviesMethod) {
+                MovieByYearDTO movie = new MovieByYearDTO();
+                movie = movieByYearDtoConverter.converter(m);
+                movieDTOS.add(movie);
+            }
+        log.info("MovieServiceImpl | getMoviesByYear returning " +movieDTOS.size() +" for year " +year+" | END");
+        if(movieDTOS.size() == 0){
+            throw new NoSuchElementException("No movies returned for year " + year);
         }
-        movieDTOS = filterOutByYear.filterMoviesByYear(movieDTOS, year);
-        log.info("MovieServiceImpl | getMoviesByYear returning " +movieDTOS.size() +" | END");
         return movieDTOS;
     }
 
